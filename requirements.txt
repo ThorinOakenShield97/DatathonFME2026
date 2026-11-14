@@ -1,0 +1,12 @@
+# Allowed on the evaluation server (docs/ENUNCIAT.md)
+numpy
+pandas
+scipy
+scikit-learn
+joblib
+xgboost
+lightgbm
+# Local development only (tutorial notebook / EDA)
+matplotlib
+jupyterlab
+ipykernel
