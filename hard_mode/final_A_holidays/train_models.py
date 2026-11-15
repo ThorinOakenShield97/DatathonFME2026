@@ -1,9 +1,14 @@
 """
-train_models.py — trains the forecast models used by hard_mode/agent.py.
+train_models.py — trains the forecast models used by agent.py in this folder.
+Both final submissions (final_A_holidays and final_B_rundrain) use the same models.
 
-Usage (from Project/hard_mode):
-    python train_models.py <path to paquet_participants_datathon_upc>            # validate, then train on everything
-    python train_models.py <path to paquet_participants_datathon_upc> --no-final # validation only
+Usage (from this folder; the repository root contains data/train and starter_kit):
+    python train_models.py ../..             # validate, then train on everything
+    python train_models.py ../.. --no-final  # validation only
+
+The models committed next to agent.py are the ones we submitted, and this script
+never overwrites them: it writes into ./retrained/ (use --out DIR to choose another
+folder). To use retrained models, copy them next to agent.py yourself.
 
 How the training set is built: the training data is replayed hour by hour
 through the SAME History/feature code the agent uses (imported from agent.py),
@@ -165,9 +170,15 @@ def main():
           f"| net load < 1500 kW in {(net < 1500).mean() * 100:.1f}%")
     print(f"LAMBDA implied by the score: {implied_lambda(table):.3f} (agent.py uses {A.LAMBDA})")
 
+    out = Path(sys.argv[sys.argv.index("--out") + 1]) if "--out" in sys.argv else HERE / "retrained"
+    if out.resolve() == HERE.resolve():
+        sys.exit("refusing to overwrite the submitted models next to agent.py; choose another --out")
+    out.mkdir(parents=True, exist_ok=True)
+    A.MODEL_DIR = out                        # the agent loads its models from here during validation
+
     # 1. Honest validation: train WITHOUT the validation weeks, score the agent on them.
     start = time.time()
-    train(build_augmented(training), HERE)
+    train(build_augmented(training), out)
     print(f"models trained on {len(training)} h in {time.time() - start:.0f} s")
     r = simulate(env_module, NoForecastAgent(), validation)
     print(f"  no forecasts (3 h only)   score={r['score']:.2f}  co2={r['co2_estalviat_pct']:.2f}%  "
@@ -179,8 +190,8 @@ def main():
 
     # 2. Final models for submission: train on ALL the data.
     if "--no-final" not in sys.argv:
-        train(build_augmented(table), HERE)
-        print("final models (trained on all data) written next to agent.py")
+        train(build_augmented(table), out)
+        print(f"final models (trained on all data) written to {out}")
 
 
 if __name__ == "__main__":
