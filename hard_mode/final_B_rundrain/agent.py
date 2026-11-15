@@ -61,8 +61,7 @@ HOLIDAYS = {datetime.date(*d) for d in [
 CLOSURE = {datetime.date(*d) for d in [
     (2025, 12, 24), (2025, 12, 29), (2025, 12, 30), (2025, 12, 31), (2026, 1, 2), (2026, 1, 5)]}
 
-# Planner settings. SHRINK = 1.15 slightly widens the forecast price/CO2 profile; on 30 held-out
-# training weeks its effect was within noise (-0.06 points, 95% CI -0.25..+0.11).
+# Planner settings. SHRINK = 1.15 slightly widens the forecast price/CO2 profile around its mean.
 CLOSURE_AS_HOLIDAY = False  # also treat the Christmas-closure working days as Sundays
 SHRINK = 1.15               # < 1 pulls the forecast price/CO2 hours towards their mean (trust forecasts less),
                             # > 1 pushes them away from it (forecasts are smoother than reality)

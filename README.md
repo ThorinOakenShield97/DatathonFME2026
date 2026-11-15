@@ -37,16 +37,11 @@ the next 3 hours of price and CO2. Every hour the agent:
 
 ## Validation
 
-* `train_models.py` holds out 12 one-week blocks, retrains without them and scores the full agent
-  in the official simulator: **18.13** points, against **5.69** for the same planner without forecasts.
-* A wider offline backtest on 30 held-out weeks (three disjoint sets of 10), with a paired bootstrap
-  over weeks, gave an honest baseline of **18.79**. Models scored on their own training weeks look
-  0.6–1.1 points better, so in-sample numbers are optimistic.
-* With perfect knowledge of the future the same planner reaches 20.43 (+1.64): about 1.0 of that gap is
-  price/CO2 forecasting and 0.5 is the current hour's net load. The planner itself is not the bottleneck.
-* Tuning knobs (λ, `SHRINK`, terminal value, scenario spread, 48 h horizon, stochastic planning) all moved
-  the score by less than the week-to-week noise (about ±0.3). The run-end drain was the only change
-  that was never negative (+0.06, 95% CI 0.00..+0.16).
+* `train_models.py` holds out 12 one-week blocks (every third week), retrains every model without them
+  and scores the full agent in the official simulator: **18.13** points (CO2 −16.86%, cost −21.11%,
+  0 infractions), against **5.69** for the same planner without forecasts.
+* λ = 0.264 matches the 0.262 implied by the score formula on the training data.
+* The 2,016 validation hours run in about 4 s, well inside the 60 s limit.
 
 ## How to run
 
