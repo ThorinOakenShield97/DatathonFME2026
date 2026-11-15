@@ -35,7 +35,7 @@ the next 3 hours of price and CO2. Every hour the agent:
 | Empty the battery before the very end of the run (energy left over is worth nothing) | – | ✓ |
 | `SHRINK` (widen the forecast price/CO2 profile) | 1.0 | 1.15 |
 
-## Validation (why we trust these, and not the leaderboard)
+## Validation
 
 * `train_models.py` holds out 12 one-week blocks, retrains without them and scores the full agent
   in the official simulator: **18.13** points, against **5.69** for the same planner without forecasts.
@@ -47,9 +47,6 @@ the next 3 hours of price and CO2. Every hour the agent:
 * Tuning knobs (λ, `SHRINK`, terminal value, scenario spread, 48 h horizon, stochastic planning) all moved
   the score by less than the week-to-week noise (about ±0.3). The run-end drain was the only change
   that was never negative (+0.06, 95% CI 0.00..+0.16).
-* We also tested optimising only the first half of each week (the part the public leaderboard
-  appears to score). It gained +4.5 there but lost −7.8 on the hidden half (−1.5 overall),
-  so we did **not** choose it as a final candidate.
 
 ## How to run
 
